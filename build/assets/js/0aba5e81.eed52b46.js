@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknumblock_docs=self.webpackChunknumblock_docs||[]).push([[143],{5254:l=>{l.exports=JSON.parse('{"label":"numblock","permalink":"/blog/tags/numblock","allTagsPath":"/blog/tags","count":3}')}}]);

@@ -1,0 +1,104 @@
+--- 
+description: Detecting that MetaMask is installed and adding additional networks and custom tokens easily make a great dApp user experience, specially those who are not technically skilled. It is important to streamline the onboarding process as much as you can to make it easier for consumers to operate your application. This guide explains how to build a simple button for your front-end application that will automatically add Figchain to MetaMask.
+keywords: [metamask, metamask api, detect metamask, detect chainid, detect account]
+---
+
+# MetaMask API
+
+Detecting that MetaMask is installed and adding additional networks and custom tokens easily make a great dApp user experience, specially those who are not technically skilled. It is important to streamline the onboarding process as much as you can to make it easier for consumers to operate your application. This guide explains how to build a simple button for your front-end application that will automatically add NumBlock to MetaMask.
+
+## Summary of actions
+
+1. Detect MetaMask or propose its installation
+2. Detect ChainId, and propose to add NumBlock if needed
+3. Detect Account, and propose to connect if needed
+
+## Detect MetaMask
+
+```js showLineNumbers
+if (typeof window.ethereum !== 'undefined') {
+  console.log('MetaMask is installed!');
+  //TODO: propose users to install MetaMask
+}
+```
+
+## Detect NumBlock
+
+The following code includes all the parameters needed by MetaMask to add NumBlock to its networks programmatically
+
+```js showLineNumbers
+var NUMBLOCK_MAINNET_PARAMS = {
+    chainId: "0x64",
+    chainName: "numblock",
+    nativeCurrency: {
+        name: "NUMB",
+        symbol: "NUMB",
+        decimals: 18,
+    },
+    rpcUrls: ["https://rpc-testnet.numblock.org"],
+    blockExplorerUrls: ["https://testnet.numblock.org"],
+}
+
+var addNumBlockToMetaMask = function() {
+    window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [NUMBLOCK_MAINNET_PARAMS],
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+};
+```
+
+## Detect account
+
+Our dApps need access to the user's account, follow this code example to get it:
+
+```js showLineNumbers
+var getAccount = async function(){
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    // MetaMask provide a single account
+    console.log(accounts[0]);
+    alert(accounts[0]);
+}
+```
+## Add Custom Token to MetaMask
+In addition to directing the user to [manually import tokens using the MetaMask UI](https://metamask.zendesk.com/hc/en-us/articles/360015489031-How-to-add-unlisted-tokens-custom-tokens-in-MetaMask#h_01FWH492CHY60HWPC28RW0872H),
+you can add code to your dApp's front end to prompt the user to add it to their MetaMask wallet automatically. This can be done using the [`wallet_watchAsset` method](https://docs.metamask.io/guide/rpc-api.html#wallet-watchasset). To do so, add the following code to your dApp's front end:
+```javascript showLineNumbers
+const tokenAddress = 'custom-token-address-on-numblock';
+const tokenSymbol = 'your-token-symbol';
+const tokenDecimals = 18; //or how ever many decimals
+const tokenImage = 'your-token-image-url';
+
+try {
+  // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+  const wasAdded = window.ethereum.request({
+    method: 'wallet_watchAsset',
+    params: {
+      type: 'ERC20', // Initially only supports ERC20, but eventually more!
+      options: {
+        address: tokenAddress, // The address that the token is at.
+        symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 chars.
+        decimals: tokenDecimals, // The number of decimals in the token
+        image: tokenImage, // A string url of the token logo
+      },
+    },
+  });
+
+  if (wasAdded) {
+    console.log('Token Added');
+  } else {
+    console.log('Failed to add');
+  }
+} catch (error) {
+  console.log(error);
+}
+```
+
+## More info
+
+- Read more about [Connect Users To Layer 2 Networks With The MetaMask Custom Networks API](https://consensys.net/blog/metamask/connect-users-to-layer-2-networks-with-the-metamask-custom-networks-api/) on the MetaMask Blog.
+- [EIP-3085](https://eips.ethereum.org/EIPS/eip-3085) is an [Ethereum Improvement Proposal](https://eips.ethereum.org/) that defines an RPC method for adding Ethereum-compatible chains to wallet applications.
+- [Full API for the window.ethereum object](https://docs.metamask.io/guide/ethereum-provider.html#table-of-contents)
+

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknumblock_docs=self.webpackChunknumblock_docs||[]).push([[5210],{1132:s=>{s.exports=JSON.parse('{"label":"ticketing system","permalink":"/blog/tags/ticketing-system","allTagsPath":"/blog/tags","count":1}')}}]);

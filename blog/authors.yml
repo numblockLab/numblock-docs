@@ -1,0 +1,17 @@
+schickler:
+  name: Jack Schickler
+  #title: Maintainer of Docusaurus
+  #url: https://github.com/endiliey
+  image_url: https://github.com/endiliey.png
+
+reeve:
+  name: Alex Reeve
+  #title: 
+  #url: #
+  image_url: https://github.com/yangshun.png
+
+slorber:
+  name: Sébastien Lorber
+  #title: Docusaurus maintainer
+  #url: https://sebastienlorber.com
+  image_url: https://github.com/slorber.png
